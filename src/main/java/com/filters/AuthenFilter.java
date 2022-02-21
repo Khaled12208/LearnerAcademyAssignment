@@ -1,0 +1,65 @@
+package com.filters;
+
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import java.util.*;
+
+/**
+ * Servlet Filter implementation class LogFilter
+ */
+@WebFilter("/LogFilter")
+public class AuthenFilter implements Filter {
+
+	public void init(FilterConfig config) throws ServletException {
+    	System.out.println("filter Auth init");
+
+	}
+
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws java.io.IOException, ServletException {
+		HttpServletRequest httpRequest = (HttpServletRequest) request;	
+		HttpServletResponse httpResponse = (HttpServletResponse) response;	
+		HttpSession session = httpRequest.getSession();
+		
+		if ((httpRequest.getRequestURI().equalsIgnoreCase("login.jsp") || (httpRequest.getRequestURI().equalsIgnoreCase("login"))))
+		{
+			
+			if (session.getAttribute("loginUser")==null)
+			{
+				httpResponse.sendRedirect("login.jsp");
+				
+			}else
+			{
+				chain.doFilter(request, response);
+
+		}
+			
+		}else {
+			
+			chain.doFilter(request, response);
+
+		}
+
+
+	}
+
+	public void destroy() {
+    	System.out.println("filter Auth  destory");
+
+	}
+
+}
